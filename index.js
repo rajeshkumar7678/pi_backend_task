@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userroute);
 
-app.use("/school", schoolroute);
+app.use("/api", schoolroute);
 
 app.listen(port, async () => {
   try {

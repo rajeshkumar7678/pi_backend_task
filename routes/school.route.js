@@ -6,12 +6,10 @@ const { filtercontroller } = require("../controllers/filter.controller");
 
 const schoolroute = express.Router();
 
-schoolroute.get("/", schoolcontroller.getschooldata);
-
 schoolroute.get(
   "/:urn",
   rolecheck(["admin", "user"]),
-  schoolcontroller.getschooldatabyid
+  schoolcontroller.getschooldatabyurn
 );
 
 schoolroute.post(
@@ -35,7 +33,10 @@ schoolroute.delete(
   schoolcontroller.deleteschool
 );
 
-schoolroute.get("/search/name", filtercontroller.search);
+schoolroute.get("/search/school", filtercontroller.search);
+
+schoolroute.get("/filter/ofstad", filtercontroller.filter);
+
 module.exports = {
   schoolroute,
 };

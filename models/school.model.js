@@ -125,8 +125,8 @@ const schoolSchema = mongoose.Schema(
   }
 );
 
-const schoolmodel = mongoose.model("school", schoolSchema);
+const Schoolmodel = mongoose.model("school", schoolSchema);
 
 module.exports = {
-  schoolmodel,
+  Schoolmodel,
 };

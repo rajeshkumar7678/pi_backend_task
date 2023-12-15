@@ -1,20 +1,10 @@
-const { schoolmodel } = require("../models/school.model");
+const { Schoolmodel } = require("../models/school.model");
 
 const schoolcontroller = {
-  getschooldata: async (req, res) => {
-    try {
-      let schooldata = await schoolmodel.find();
-      res.status(200).send({ schooldata: schooldata });
-    } catch (error) {
-      console.log(error);
-      res.status(400).send("something went wrong");
-    }
-  },
-
-  getschooldatabyid: async (req, res) => {
+  getschooldatabyurn: async (req, res) => {
     try {
       let { urn } = req.params;
-      let schooldata = await schoolmodel.findOne({ urn: urn });
+      let schooldata = await Schoolmodel.findOne({ urn: urn });
 
       if (!schooldata) {
         return res.status(400).send({ message: "school not found " });
@@ -29,21 +19,17 @@ const schoolcontroller = {
   addschooldata: async (req, res) => {
     try {
       let schooldata = req.body;
-      if (!schooldata) {
+      if (!schooldata && !schooldata.urn) {
         return res.status(400).send({ message: "please provide school data" });
       }
 
-      if (!schooldata.urn) {
-        return res.status(400).send({ message: "please provide school urn " });
-      }
+      let checkschool = await Schoolmodel.findOne({ urn: schooldata.urn });
 
-      let checkschool = await schoolmodel.findOne({ urn: schooldata.urn });
-      //   console.log(checkschool);
       if (checkschool) {
         return res.status(400).send({ message: "already exist" });
       }
 
-      let newschool = new schoolmodel(schooldata);
+      let newschool = new Schoolmodel(schooldata);
       await newschool.save();
       res.status(200).send({ message: "school added successfull" });
     } catch (error) {
@@ -69,13 +55,13 @@ const schoolcontroller = {
           .send({ message: "please provide data to update" });
       }
 
-      let checkschool = await schoolmodel.findOne({ urn });
+      let checkschool = await Schoolmodel.findOne({ urn });
 
       if (!checkschool) {
         return res.status(400).send({ message: "school not exist in db " });
       }
 
-      let updateschool = await schoolmodel.findByIdAndUpdate(
+      let updateschool = await Schoolmodel.findByIdAndUpdate(
         checkschool._id,
         payload
       );
@@ -97,13 +83,13 @@ const schoolcontroller = {
           .send({ message: "please provide data to update" });
       }
 
-      let checkschool = await schoolmodel.findOne({ urn });
+      let checkschool = await Schoolmodel.findOne({ urn });
 
       if (!checkschool) {
         return res.status(400).send({ message: "school not exist in db " });
       }
 
-      let updateschool = await schoolmodel.findByIdAndDelete(checkschool._id);
+      let updateschool = await Schoolmodel.findByIdAndDelete(checkschool._id);
 
       res.status(200).send({ message: "school data deleted " });
     } catch (error) {
